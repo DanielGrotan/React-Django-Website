@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Account
-from .serializers import AccountAuthenticationSerializer, AccountSerializer
+from .serializers import AccountSerializer, CreateAccountSerializer
 
 
 class AccountView(generics.ListAPIView):
@@ -13,8 +13,6 @@ class AccountView(generics.ListAPIView):
 
 
 class LogIntoAccountView(APIView):
-    serializer_class = AccountAuthenticationSerializer
-
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -37,7 +35,7 @@ class LogIntoAccountView(APIView):
 
 
 class CreateAccountView(APIView):
-    serializer_class = AccountAuthenticationSerializer
+    serializer_class = CreateAccountSerializer
 
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
@@ -70,3 +68,30 @@ class CreateAccountView(APIView):
         return Response(
             {"Error": "Ugyldig data..."}, status=status.HTTP_400_BAD_REQUEST
         )
+
+
+class GetAccountStatusView(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        if (user_id := self.request.session.get("user_id")) is not None:
+            account_queryset = Account.objects.filter(id=user_id)
+
+            if account_queryset.exists():
+                return Response(
+                    {"username": account_queryset[0].username},
+                    status=status.HTTP_200_OK,
+                )
+
+        return Response({"Ok": "Not logged in yet"}, status=status.HTTP_200_OK)
+
+
+class LogOutView(APIView):
+    def get(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        self.request.session.pop("user_id", None)
+
+        return Response({"Ok": "Logged out"}, status=status.HTTP_200_OK)

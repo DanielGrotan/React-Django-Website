@@ -1,11 +1,11 @@
 import {
-    Box,
-    Button,
-    Container,
-    CssBaseline,
-    Grid,
-    TextField,
-    Typography
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  TextField,
+  Typography
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { Component } from "react";
@@ -44,7 +44,7 @@ export default class LoginPage extends Component {
           password: this.state.password,
         }),
       };
-      fetch("/api/login-to-account", requestOptions)
+      fetch("/api/login", requestOptions)
         .then((response) => {
           if (response.status == 200) {
             document.location.href = "/";
