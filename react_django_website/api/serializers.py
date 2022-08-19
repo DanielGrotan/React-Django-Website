@@ -9,7 +9,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ("id", "username", "password", "created_at")
 
 
-class CreateAccountSerializer(serializers.ModelSerializer):
+class AccountAuthenticationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ("username", "password")

@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.contrib.auth.hashers import check_password
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Account
-from .serializers import AccountSerializer, CreateAccountSerializer
+from .serializers import AccountAuthenticationSerializer, AccountSerializer
 
 
 class AccountView(generics.ListAPIView):
@@ -12,8 +12,32 @@ class AccountView(generics.ListAPIView):
     serializer_class = AccountSerializer
 
 
+class LogIntoAccountView(APIView):
+    serializer_class = AccountAuthenticationSerializer
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        account = Account.objects.filter(username=username)
+
+        if account.exists():
+            account = account[0]
+            if check_password(password, account.password):
+                self.request.session["user_id"] = account.id
+                return Response({"Ok": "Logged In"}, status=status.HTTP_200_OK)
+
+        return Response(
+            {"Error": "Ugyldig brukernavn eller passord"},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+
 class CreateAccountView(APIView):
-    serializer_class = CreateAccountSerializer
+    serializer_class = AccountAuthenticationSerializer
 
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
