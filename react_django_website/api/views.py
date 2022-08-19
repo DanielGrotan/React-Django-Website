@@ -37,12 +37,12 @@ class CreateAccountView(APIView):
         username_errors = serializer.errors.get("username")
 
         if username_errors is not None and any(
-            lambda error: error.code == "unique", username_errors
+            map(lambda error: error.code == "unique", username_errors)
         ):
             return Response(
-                {"Ok": "Username is already taken"}, status=status.HTTP_200_OK
+                {"Error": "Brukernavnet er allerede tatt"}, status=status.HTTP_200_OK
             )
 
         return Response(
-            {"Bad Request": "Invalid data..."}, status=status.HTTP_400_BAD_REQUEST
+            {"Error": "Ugyldig data..."}, status=status.HTTP_400_BAD_REQUEST
         )

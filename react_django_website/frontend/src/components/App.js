@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
@@ -15,13 +14,10 @@ export default class App extends Component {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage/>} />
-          <Route path="/login" element={<LoginPage/>} />
-          <Route path="/register" element={<RegisterPage/>} />
+          <Route path="/logg-inn" element={<LoginPage/>} />
+          <Route path="/registrer" element={<RegisterPage/>} />
         </Routes>
       </Router>
     );
   }
 }
-
-const appDiv = document.getElementById("app");
-render(<App />, appDiv);
