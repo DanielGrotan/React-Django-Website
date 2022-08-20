@@ -80,11 +80,11 @@ class GetAccountStatusView(APIView):
 
             if account_queryset.exists():
                 return Response(
-                    {"username": account_queryset[0].username},
+                    {"Logged in": True},
                     status=status.HTTP_200_OK,
                 )
 
-        return Response({"Ok": "Not logged in yet"}, status=status.HTTP_200_OK)
+        return Response({"Logged in": False}, status=status.HTTP_200_OK)
 
 
 class LogOutView(APIView):

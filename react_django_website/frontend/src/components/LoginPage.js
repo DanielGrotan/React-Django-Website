@@ -37,22 +37,22 @@ export default class LoginPage extends Component {
     event.preventDefault();
 
     const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }),
-      };
-      fetch("/api/login", requestOptions)
-        .then((response) => {
-          if (response.status == 200) {
-            document.location.href = "/";
-          }
-  
-          return response.json();
-        })
-        .then((data) => this.setState({ error: data["Error"] })); 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+    };
+    fetch("/api/login", requestOptions)
+      .then((response) => {
+        if (response.status == 200) {
+          document.location.href = "/";
+        }
+
+        return response.json();
+      })
+      .then((data) => this.setState({ error: data["Error"] }));
   }
 
   render() {
@@ -83,6 +83,7 @@ export default class LoginPage extends Component {
                 id="username"
                 label="Brukernavn"
                 name="username"
+                autoComplete="off"
                 autoFocus
                 error={this.state.error !== ""}
                 helperText={this.state.error !== "" ? this.state.error : " "}

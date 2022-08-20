@@ -83,6 +83,7 @@ export default class RegisterPage extends Component {
                 id="username"
                 label="Brukernavn"
                 name="username"
+                autoComplete="off"
                 autoFocus
                 error={this.state.error !== ""}
                 helperText={this.state.error !== "" ? this.state.error : " "}
