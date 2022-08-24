@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export default class HomePage extends Component {
     constructor(props) {
@@ -18,28 +19,12 @@ export default class HomePage extends Component {
         });
     }
 
-    handleTestClick(event) {
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                rows: 2,
-                columns: 4,
-                table_positions: JSON.stringify([(4, 2), (1, 0), (0, 1)])
-            })
-        };
-
-        fetch("/api/create-classroom-layout", requestOptions).then((response) => response.json()).then((data) => console.log(data));
-    }
-
     render() {
         return (<div>
             <Button variant="contained" onClick={this.handleLogOutClick} style={{ position: "absolute", right: 5, top: 5 }}>Logg ut</Button>
-            <Button variant="contained" style={{ position: "absolute", right: "51vw", top: "50vh" }}>Venstre</Button>
-            <Button variant="contained" style={{ position: "absolute", left: "51vw", top: "50vh" }}>Høyre</Button>
-            <Button variant="contained" onClick={this.handleTestClick}>Test</Button>
+            <Button variant="outlined" component={Link} to="/klasserom">Lag Klasserom</Button>
+            <Button variant="outlined" component={Link} to="/klasseliste">Lag Klasseliste</Button>
+            <Button variant="outlined" component={Link} to="/klassekart">Generer Klassekart</Button>
         </div>)
     }
 }
