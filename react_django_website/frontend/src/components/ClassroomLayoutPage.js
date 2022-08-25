@@ -100,7 +100,7 @@ export default class ClassroomLayoutPage extends Component {
 
     fetch("/api/create-classroom-layout", requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => document.location.href="/");
   }
 
   createTable() {
@@ -166,7 +166,7 @@ export default class ClassroomLayoutPage extends Component {
         <TextField onChange={this.handleNameChange}>
           {this.state.name}
         </TextField>
-        <Button variant="contained" onClick={this.handleSaveButtonClick}>
+        <Button variant="contained" disabled={this.state.name === ""} onClick={this.handleSaveButtonClick}>
           Lagre Klasserom
         </Button>
       </div>
