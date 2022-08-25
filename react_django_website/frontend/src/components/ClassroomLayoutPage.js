@@ -7,6 +7,7 @@ export default class ClassroomLayoutPage extends Component {
     super(props);
 
     this.state = {
+      name: "",
       rows: "2",
       columns: "2",
       grid: [
@@ -26,6 +27,7 @@ export default class ClassroomLayoutPage extends Component {
     this.handleRowsChange = this.handleRowsChange.bind(this);
     this.handleColumnsChange = this.handleColumnsChange.bind(this);
     this.handleButtonClick = this.handleButtonClick.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
     this.createTable = this.createTable.bind(this);
   }
@@ -63,6 +65,12 @@ export default class ClassroomLayoutPage extends Component {
     });
   }
 
+  handleNameChange(event) {
+    this.setState({
+      name: event.target.value
+    });
+  }
+
   handleSaveButtonClick() {
     const rows = Number(this.state.rows)
     const columns = Number(this.state.columns)
@@ -83,6 +91,7 @@ export default class ClassroomLayoutPage extends Component {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            name: this.state.name,
             rows: this.state.rows,
             columns: this.state.columns,
             table_positions: JSON.stringify(tablePositions)
@@ -96,7 +105,7 @@ export default class ClassroomLayoutPage extends Component {
     const { innerWidth: width, innerHeight: height } = window;
 
     const buttonWidth = (width * 0.9) / Number(this.state.columns) + "px";
-    const buttonHeight = (height * 0.8) / Number(this.state.rows) + "px";
+    const buttonHeight = (height * 0.6) / Number(this.state.rows) + "px";
 
     return (
       <tbody>
@@ -152,6 +161,7 @@ export default class ClassroomLayoutPage extends Component {
           style={{ marginTop: "10px" }}
         />
         <table style={{ paddingLeft: 10 }}>{this.createTable()}</table>
+        <TextField onChange={this.handleNameChange}>{this.state.name}</TextField>
         <Button variant="contained" onClick={this.handleSaveButtonClick}>Lagre Klasserom</Button>
       </div>
     );

@@ -15,12 +15,14 @@ class Account(models.Model):
 
 class ClassList(models.Model):
     account_id = models.IntegerField()
+    name = models.TextField()
     names = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ClassroomLayout(models.Model):
     account_id = models.IntegerField()
+    name = models.TextField()
     rows = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)]
     )

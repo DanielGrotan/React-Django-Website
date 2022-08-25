@@ -12,13 +12,13 @@ class AccountSerializer(serializers.ModelSerializer):
 class ClassListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassList
-        fields = ("id", "names", "created_at")
+        fields = ("id", "name", "names", "created_at")
 
 
 class ClassroomLayoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassroomLayout
-        fields = ("id", "rows", "columns", "table_positions", "created_at")
+        fields = ("id", "name", "rows", "columns", "table_positions", "created_at")
 
 
 class CreateAccountSerializer(serializers.ModelSerializer):
@@ -30,10 +30,10 @@ class CreateAccountSerializer(serializers.ModelSerializer):
 class CreateClassListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassList
-        fields = ("names",)
+        fields = ("name", "names")
 
 
 class CreateClassroomLayoutSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassroomLayout
-        fields = ("rows", "columns", "table_positions")
+        fields = ("name", "rows", "columns", "table_positions")

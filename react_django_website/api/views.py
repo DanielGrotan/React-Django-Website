@@ -131,9 +131,10 @@ class CreateClassListView(APIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
+            name = serializer.data.get("name")
             names = serializer.data.get("names")
 
-            class_list = ClassList(account_id=account_id, names=names)
+            class_list = ClassList(account_id=account_id, name=name, names=names)
             class_list.save()
 
             return Response(
@@ -160,12 +161,14 @@ class CreateClassroomLayoutView(APIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
+            name = serializer.data.get("name")
             rows = serializer.data.get("rows")
             columns = serializer.data.get("columns")
             table_positions = serializer.data.get("table_positions")
 
             classroom_layout = ClassroomLayout(
                 account_id=account_id,
+                name=name,
                 rows=rows,
                 columns=columns,
                 table_positions=table_positions,
@@ -192,7 +195,9 @@ class GetClassListsView(APIView):
             )
 
         queryset = ClassList.objects.filter(account_id=account_id)
-        queryset_json = serializers.serialize("json", queryset, fields=("names",))
+        queryset_json = serializers.serialize(
+            "json", queryset, fields=("name", "names")
+        )
         return HttpResponse(queryset_json, content_type="application/json")
 
 
@@ -208,6 +213,6 @@ class GetClassroomLayoutsView(APIView):
 
         queryset = ClassroomLayout.objects.filter(account_id=account_id)
         queryset_json = serializers.serialize(
-            "json", queryset, fields=("rows", "columns", "table_positions")
+            "json", queryset, fields=("name", "rows", "columns", "table_positions")
         )
         return HttpResponse(queryset_json, content_type="application/json")
