@@ -67,38 +67,40 @@ export default class ClassroomLayoutPage extends Component {
 
   handleNameChange(event) {
     this.setState({
-      name: event.target.value
+      name: event.target.value,
     });
   }
 
   handleSaveButtonClick() {
-    const rows = Number(this.state.rows)
-    const columns = Number(this.state.columns)
+    const rows = Number(this.state.rows);
+    const columns = Number(this.state.columns);
 
     const tablePositions = new Array();
 
     for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < columns; j++) {
-            if (this.state.grid[i][j]) {
-                tablePositions.push([i, j]);
-            }
+      for (let j = 0; j < columns; j++) {
+        if (this.state.grid[i][j]) {
+          tablePositions.push([i, j]);
         }
+      }
     }
 
     const requestOptions = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: this.state.name,
-            rows: this.state.rows,
-            columns: this.state.columns,
-            table_positions: JSON.stringify(tablePositions)
-        })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: this.state.name,
+        rows: this.state.rows,
+        columns: this.state.columns,
+        table_positions: JSON.stringify(tablePositions),
+      }),
     };
 
-    fetch("/api/create-classroom-layout", requestOptions).then((response) => response.json()).then((data) => console.log(data))
+    fetch("/api/create-classroom-layout", requestOptions)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   }
 
   createTable() {
@@ -161,8 +163,12 @@ export default class ClassroomLayoutPage extends Component {
           style={{ marginTop: "10px" }}
         />
         <table style={{ paddingLeft: 10 }}>{this.createTable()}</table>
-        <TextField onChange={this.handleNameChange}>{this.state.name}</TextField>
-        <Button variant="contained" onClick={this.handleSaveButtonClick}>Lagre Klasserom</Button>
+        <TextField onChange={this.handleNameChange}>
+          {this.state.name}
+        </TextField>
+        <Button variant="contained" onClick={this.handleSaveButtonClick}>
+          Lagre Klasserom
+        </Button>
       </div>
     );
   }
