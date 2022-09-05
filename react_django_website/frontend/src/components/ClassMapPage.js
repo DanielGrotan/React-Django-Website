@@ -54,14 +54,16 @@ export default class ClassMapPage extends Component {
   handleClassroomLayoutChange(event) {
     this.setState({
       classroomLayout: event.target.value,
-      generatedNames: []
+      nameGrid: null,
+      selected: null,
     });
   }
 
   handleClassListChange(event) {
     this.setState({
       classList: event.target.value,
-      generatedNames: []
+      nameGrid: null,
+      selected: null,
     });
   }
 
@@ -185,16 +187,18 @@ export default class ClassMapPage extends Component {
         >
           Hjem
         </Button>
+        <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "2em" }}>
         <FormControl style={{ minWidth: 120 }}>
           <InputLabel>Klasserom</InputLabel>
           <Select
             value={this.state.classroomLayout}
             label="Klasserom"
             onChange={this.handleClassroomLayoutChange}
+            style={{ width: "45ch" }}
           >
             {this.state.classroomLayouts.map((layout, index) => {
               return (
-                <MenuItem value={layout["name"]} key={index}>
+                <MenuItem value={index} key={index}>
                   {layout["name"]}
                 </MenuItem>
               );
@@ -207,10 +211,11 @@ export default class ClassMapPage extends Component {
             value={this.state.classList}
             label="Klasseliste"
             onChange={this.handleClassListChange}
+            style={{ width: "45ch" }}
           >
             {this.state.classLists.map((list, index) => {
               return (
-                <MenuItem value={list["name"]} key={index}>
+                <MenuItem value={index} key={index}>
                   {list["name"]}
                 </MenuItem>
               );
@@ -227,6 +232,7 @@ export default class ClassMapPage extends Component {
         >
           Generer Klassekart
         </Button>
+        </div>
       </div>
     );
   }
