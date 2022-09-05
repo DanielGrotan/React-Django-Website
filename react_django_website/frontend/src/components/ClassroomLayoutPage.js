@@ -100,7 +100,7 @@ export default class ClassroomLayoutPage extends Component {
 
     fetch("/api/create-classroom-layout", requestOptions)
       .then((response) => response.json())
-      .then((data) => document.location.href="/");
+      .then((data) => (document.location.href = "/"));
   }
 
   createTable() {
@@ -137,7 +137,7 @@ export default class ClassroomLayoutPage extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ height: "100%" }}>
         <Button
           variant="contained"
           component={Link}
@@ -146,29 +146,46 @@ export default class ClassroomLayoutPage extends Component {
         >
           Hjem
         </Button>
-        <TextField
-          type="number"
-          inputProps={{ min: 1, max: 15, style: { textAlign: "center" } }}
-          onChange={this.handleRowsChange}
-          value={this.state.rows}
-          label="Rader"
-          style={{ marginTop: "10px" }}
-        />
-        <TextField
-          type="number"
-          inputProps={{ min: 1, max: 15, style: { textAlign: "center" } }}
-          onChange={this.handleColumnsChange}
-          value={this.state.columns}
-          label="Kolonner"
-          style={{ marginTop: "10px" }}
-        />
-        <table style={{ paddingLeft: 10 }}>{this.createTable()}</table>
-        <TextField onChange={this.handleNameChange}>
-          {this.state.name}
-        </TextField>
-        <Button variant="contained" disabled={this.state.name === ""} onClick={this.handleSaveButtonClick}>
-          Lagre Klasserom
-        </Button>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flexStart",
+            alignItems: "center",
+            gap: "1em",
+          }}
+        >
+          <div style={{ display: "flex", gap: ".75em" }}>
+            <TextField
+              type="number"
+              inputProps={{ min: 1, max: 15, style: { textAlign: "center" } }}
+              onChange={this.handleRowsChange}
+              value={this.state.rows}
+              label="Rader"
+              style={{ marginTop: "10px" }}
+            />
+            <TextField
+              type="number"
+              inputProps={{ min: 1, max: 15, style: { textAlign: "center" } }}
+              onChange={this.handleColumnsChange}
+              value={this.state.columns}
+              label="Kolonner"
+              style={{ marginTop: "10px" }}
+            />
+          </div>
+          <table>{this.createTable()}</table>
+          <TextField onChange={this.handleNameChange}>
+            {this.state.name}
+          </TextField>
+          <Button
+            variant="contained"
+            disabled={this.state.name === ""}
+            onClick={this.handleSaveButtonClick}
+          >
+            Lagre Klasserom
+          </Button>
+        </div>
       </div>
     );
   }

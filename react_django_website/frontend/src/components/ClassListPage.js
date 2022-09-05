@@ -43,12 +43,12 @@ export default class ClassListPage extends Component {
 
     fetch("/api/create-class-list", requestOptions)
       .then((response) => response.json())
-      .then((data) => document.location.href = "/");
+      .then((data) => (document.location.href = "/"));
   }
 
   render() {
     return (
-      <div>
+      <div style={{ height: "100%" }}>
         <Button
           variant="contained"
           component={Link}
@@ -57,19 +57,36 @@ export default class ClassListPage extends Component {
         >
           Hjem
         </Button>
-        <TextField
-          onChange={this.handleNameChange}
-          label="Gi klasselisten et navn"
-        ></TextField>
-        <TextField
-          id="names"
-          placeholder="Skriv hvert navn på sin egen linje"
-          multiline
-          rows={15}
-        ></TextField>
-        <Button variant="contained" disabled={this.state.name === ""} onClick={this.handleSaveButtonClick}>
-          Lagre Klasseliste
-        </Button>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "2em",
+          }}
+        >
+          <TextField
+            onChange={this.handleNameChange}
+            label="Gi klasselisten et navn"
+            style={{ width: "45ch" }}
+          ></TextField>
+          <TextField
+            id="names"
+            placeholder="Skriv hvert navn på sin egen linje"
+            multiline
+            rows={15}
+            style={{ width: "45ch" }}
+          ></TextField>
+          <Button
+            variant="contained"
+            disabled={this.state.name === ""}
+            onClick={this.handleSaveButtonClick}
+          >
+            Lagre Klasseliste
+          </Button>
+        </div>
       </div>
     );
   }

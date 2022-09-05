@@ -53,14 +53,14 @@ export default class ClassMapPage extends Component {
   handleClassroomLayoutChange(event) {
     this.setState({
       classroomLayout: event.target.value,
-      generatedNames: []
+      generatedNames: [],
     });
   }
 
   handleClassListChange(event) {
     this.setState({
       classList: event.target.value,
-      generatedNames: []
+      generatedNames: [],
     });
   }
 
@@ -157,7 +157,7 @@ export default class ClassMapPage extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ height: "100%" }}>
         <Button
           variant="contained"
           component={Link}
@@ -166,48 +166,61 @@ export default class ClassMapPage extends Component {
         >
           Hjem
         </Button>
-        <FormControl style={{ minWidth: 120 }}>
-          <InputLabel>Klasserom</InputLabel>
-          <Select
-            value={this.state.classroomLayout}
-            label="Klasserom"
-            onChange={this.handleClassroomLayoutChange}
-          >
-            {this.state.classroomLayouts.map((layout, index) => {
-              return (
-                <MenuItem value={layout["name"]} key={index}>
-                  {layout["name"]}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        <FormControl style={{ minWidth: 120 }}>
-          <InputLabel>Klasseliste</InputLabel>
-          <Select
-            value={this.state.classList}
-            label="Klasseliste"
-            onChange={this.handleClassListChange}
-          >
-            {this.state.classLists.map((list, index) => {
-              return (
-                <MenuItem value={list["name"]} key={index}>
-                  {list["name"]}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
-        {this.createTable()}
-        <Button
-          disabled={
-            this.state.classroomLayout === "" || this.state.classList === ""
-          }
-          variant="contained"
-          onClick={this.handleGenerateButtonClick}
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "2em",
+          }}
         >
-          Generer Klassekart
-        </Button>
+          <FormControl style={{ minWidth: 120 }}>
+            <InputLabel>Klasserom</InputLabel>
+            <Select
+              value={this.state.classroomLayout}
+              label="Klasserom"
+              onChange={this.handleClassroomLayoutChange}
+              style={{ width: "45ch" }}
+            >
+              {this.state.classroomLayouts.map((layout, index) => {
+                return (
+                  <MenuItem value={layout["name"]} key={index}>
+                    {layout["name"]}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl style={{ minWidth: 120 }}>
+            <InputLabel>Klasseliste</InputLabel>
+            <Select
+              value={this.state.classList}
+              label="Klasseliste"
+              onChange={this.handleClassListChange}
+              style={{ width: "45ch" }}
+            >
+              {this.state.classLists.map((list, index) => {
+                return (
+                  <MenuItem value={list["name"]} key={index}>
+                    {list["name"]}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          {this.createTable()}
+          <Button
+            disabled={
+              this.state.classroomLayout === "" || this.state.classList === ""
+            }
+            variant="contained"
+            onClick={this.handleGenerateButtonClick}
+          >
+            Generer Klassekart
+          </Button>
+        </div>
       </div>
     );
   }

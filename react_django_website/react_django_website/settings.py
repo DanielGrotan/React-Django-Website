@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-g)5ef3$)*r^51usnlddbe0nwsndgp_w=4^$#+72w02=ud#7skd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["danielgg.pythonanywhere.com"]
 
 
 # Application definition
@@ -119,6 +119,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+
+STATIC_ROOT = "/home/DanielGG/React-Django-Website/react_django_website/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
