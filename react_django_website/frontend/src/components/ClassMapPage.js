@@ -25,7 +25,8 @@ export default class ClassMapPage extends Component {
       classLists: [],
       classroomLayout: "",
       classList: "",
-      generatedNames: [],
+      nameGrid: null,
+      selected: null,
     };
 
     this.handleClassroomLayoutChange =
@@ -53,31 +54,34 @@ export default class ClassMapPage extends Component {
   handleClassroomLayoutChange(event) {
     this.setState({
       classroomLayout: event.target.value,
-      generatedNames: [],
+      generatedNames: []
     });
   }
 
   handleClassListChange(event) {
     this.setState({
       classList: event.target.value,
-      generatedNames: [],
+      generatedNames: []
     });
   }
 
   handleGenerateButtonClick() {
-    const classList = this.state.classLists.filter(
-      (list) => list["name"] === this.state.classList
-    )[0];
+    const classList = this.state.classLists[this.state.classList];
     const names = JSON.parse(classList["names"]);
 
     const namesShuffled = names.sort(() => 0.5 - Math.random());
 
-    const classroomLayout = this.state.classroomLayouts.filter(
-      (layout) => layout["name"] === this.state.classroomLayout
-    )[0];
+    const classroomLayout =
+      this.state.classroomLayouts[this.state.classroomLayout];
     const tablePositions = JSON.parse(classroomLayout["table_positions"]);
 
-    const generatedNames = new Array();
+    const layout = this.state.classroomLayouts[this.state.classroomLayout];
+
+    const nameGrid = new Array(Number(layout["rows"]));
+
+    for (let i = 0; i < Number(layout["rows"]); i++) {
+      nameGrid[i] = new Array(Number(layout["columns"])).fill("");
+    }
 
     for (let i = 0; i < tablePositions.length; i++) {
       if (i > namesShuffled.length - 1) break;
@@ -85,20 +89,41 @@ export default class ClassMapPage extends Component {
       const x = tablePositions[i][0];
       const y = tablePositions[i][1];
 
-      generatedNames.push([x, y, namesShuffled[i]]);
+      nameGrid[x][y] = namesShuffled[i];
     }
 
     this.setState({
-      generatedNames: generatedNames,
+      nameGrid: nameGrid,
     });
+  }
+
+  handleButtonClick(row, column) {
+    if (this.state.selected === null) {
+      this.setState({
+        selected: [row, column],
+      });
+    } else {
+      if (this.state.nameGrid === null) return;
+      const nameGrid = [...this.state.nameGrid];
+      const temp = nameGrid[row][column];
+
+      const x = this.state.selected[0];
+      const y = this.state.selected[1];
+
+      nameGrid[row][column] = nameGrid[x][y];
+      nameGrid[x][y] = temp;
+
+      this.setState({
+        nameGrid: nameGrid,
+        selected: null,
+      });
+    }
   }
 
   createTable() {
     if (this.state.classroomLayout === "") return;
 
-    const fields = this.state.classroomLayouts.filter(
-      (layout) => layout["name"] === this.state.classroomLayout
-    )[0];
+    const fields = this.state.classroomLayouts[this.state.classroomLayout];
     const rows = Number(fields["rows"]);
     const columns = Number(fields["columns"]);
     const tablePositions = JSON.parse(fields["table_positions"]);
@@ -116,18 +141,7 @@ export default class ClassMapPage extends Component {
       grid[row][column] = true;
     }
 
-    const nameGrid = new Array(rows);
-
-    for (let i = 0; i < rows; i++) {
-      nameGrid[i] = new Array(columns).fill("");
-    }
-
-    for (let i = 0; i < this.state.generatedNames.length; i++) {
-      const x = this.state.generatedNames[i][0];
-      const y = this.state.generatedNames[i][1];
-      const name = this.state.generatedNames[i][2];
-      nameGrid[x][y] = name;
-    }
+    const nameGrid = this.state.nameGrid;
 
     return (
       <table>
@@ -141,8 +155,13 @@ export default class ClassMapPage extends Component {
                       <Button
                         variant={grid[row][column] ? "contained" : "outlined"}
                         style={{ width: "100px", height: "50px" }}
+                        onClick={
+                          grid[row][column]
+                            ? () => this.handleButtonClick(row, column)
+                            : () => {}
+                        }
                       >
-                        {nameGrid[row][column]}
+                        {nameGrid === null ? "" : nameGrid[row][column]}
                       </Button>
                     </td>
                   );
@@ -166,61 +185,48 @@ export default class ClassMapPage extends Component {
         >
           Hjem
         </Button>
-        <div
-          style={{
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "2em",
-          }}
-        >
-          <FormControl style={{ minWidth: 120 }}>
-            <InputLabel>Klasserom</InputLabel>
-            <Select
-              value={this.state.classroomLayout}
-              label="Klasserom"
-              onChange={this.handleClassroomLayoutChange}
-              style={{ width: "45ch" }}
-            >
-              {this.state.classroomLayouts.map((layout, index) => {
-                return (
-                  <MenuItem value={layout["name"]} key={index}>
-                    {layout["name"]}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <FormControl style={{ minWidth: 120 }}>
-            <InputLabel>Klasseliste</InputLabel>
-            <Select
-              value={this.state.classList}
-              label="Klasseliste"
-              onChange={this.handleClassListChange}
-              style={{ width: "45ch" }}
-            >
-              {this.state.classLists.map((list, index) => {
-                return (
-                  <MenuItem value={list["name"]} key={index}>
-                    {list["name"]}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          {this.createTable()}
-          <Button
-            disabled={
-              this.state.classroomLayout === "" || this.state.classList === ""
-            }
-            variant="contained"
-            onClick={this.handleGenerateButtonClick}
+        <FormControl style={{ minWidth: 120 }}>
+          <InputLabel>Klasserom</InputLabel>
+          <Select
+            value={this.state.classroomLayout}
+            label="Klasserom"
+            onChange={this.handleClassroomLayoutChange}
           >
-            Generer Klassekart
-          </Button>
-        </div>
+            {this.state.classroomLayouts.map((layout, index) => {
+              return (
+                <MenuItem value={layout["name"]} key={index}>
+                  {layout["name"]}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        <FormControl style={{ minWidth: 120 }}>
+          <InputLabel>Klasseliste</InputLabel>
+          <Select
+            value={this.state.classList}
+            label="Klasseliste"
+            onChange={this.handleClassListChange}
+          >
+            {this.state.classLists.map((list, index) => {
+              return (
+                <MenuItem value={list["name"]} key={index}>
+                  {list["name"]}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+        {this.createTable()}
+        <Button
+          disabled={
+            this.state.classroomLayout === "" || this.state.classList === ""
+          }
+          variant="contained"
+          onClick={this.handleGenerateButtonClick}
+        >
+          Generer Klassekart
+        </Button>
       </div>
     );
   }
