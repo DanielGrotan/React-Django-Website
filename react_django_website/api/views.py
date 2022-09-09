@@ -13,6 +13,7 @@ from .serializers import (
     CreateAccountSerializer,
     CreateClassListSerializer,
     CreateClassroomLayoutSerializer,
+    DeleteClassListSerializer,
     UpdateClassListSerializer,
 )
 
@@ -174,6 +175,32 @@ class CreateClassListView(APIView):
                 )
 
             return Response({"Test": "idk"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        return Response(
+            {"Bad Request": "Invalid data..."}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def delete(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        if (account_id := self.request.session.get("user_id")) is None:
+            return Response(
+                {"Unauthorized", "Not logged in"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        serializer = DeleteClassListSerializer(data=request.data)
+
+        if serializer.is_valid():
+            id = request.data.get("id")
+
+            queryset = ClassList.objects.filter(id=id, account_id=account_id)
+            if queryset.exists():
+                queryset.delete()
+
+                return Response(
+                    {"Success", "Deleted class list"}, status=status.HTTP_200_OK
+                )
 
         return Response(
             {"Bad Request": "Invalid data..."}, status=status.HTTP_400_BAD_REQUEST

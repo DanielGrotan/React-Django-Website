@@ -90,6 +90,7 @@ class Edit extends Component {
 
     this.handleNamesChange = this.handleNamesChange.bind(this);
     this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
+    this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
   }
 
   handleNamesChange(event) {
@@ -119,6 +120,20 @@ class Edit extends Component {
       .then((data) => (document.location.href = "/"));
   }
 
+  handleDeleteButtonClick() {
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: this.props.id }),
+    };
+
+    fetch("/api/create-class-list", requestOptions)
+      .then((response) => response.json())
+      .then((data) => (document.location.href = "/"));
+  }
+
   render() {
     return (
       <div
@@ -141,6 +156,9 @@ class Edit extends Component {
         ></TextField>
         <Button variant="contained" onClick={this.handleUpdateButtonClick}>
           Lagre Endringer
+        </Button>
+        <Button variant="contained" color="secondary" onClick={this.handleDeleteButtonClick}>
+          Slett Klasseliste
         </Button>
       </div>
     );
