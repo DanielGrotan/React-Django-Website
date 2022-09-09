@@ -31,6 +31,12 @@ class CreateClassListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassList
         fields = ("name", "names")
+    
+
+class UpdateClassListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassList
+        fields = ("id", "names")
 
 
 class CreateClassroomLayoutSerializer(serializers.ModelSerializer):

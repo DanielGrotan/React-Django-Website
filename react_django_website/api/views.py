@@ -13,6 +13,7 @@ from .serializers import (
     CreateAccountSerializer,
     CreateClassListSerializer,
     CreateClassroomLayoutSerializer,
+    UpdateClassListSerializer,
 )
 
 
@@ -143,6 +144,39 @@ class CreateClassListView(APIView):
 
         return Response(
             {"Bad request": "Invalid data..."}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    def patch(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        if (account_id := self.request.session.get("user_id")) is None:
+            return Response(
+                {"Unauthorized", "Not logged in"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        serializer = UpdateClassListSerializer(data=request.data)
+
+        if serializer.is_valid():
+            id = request.data.get("id")
+            names = request.data.get("names")
+
+            class_list = ClassList.objects.filter(id=id, account_id=account_id)
+            if class_list.exists():
+                class_list = class_list[0]
+
+                class_list.names = names
+                class_list.save()
+
+                return Response(
+                    {"Success", "Class List has been updated"},
+                    status=status.HTTP_200_OK,
+                )
+
+            return Response({"Test": "idk"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        return Response(
+            {"Bad Request": "Invalid data..."}, status=status.HTTP_400_BAD_REQUEST
         )
 
 
